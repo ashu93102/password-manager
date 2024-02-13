@@ -1,11 +1,37 @@
 import tkinter
 from tkinter import messagebox
-
-
+import random
+import pyperclip
 # To show popup we can use popup module
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
+
+def generate_passwd():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+               'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+               'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+    nr_letters = random.randint(8, 10)
+    nr_symbols = random.randint(2, 4)
+    nr_numbers = random.randint(2, 4)
+    # below line is called list comprehension
+    total_letters = [random.choice(letters) for _ in range(nr_letters)]
+    total_numbers = [random.choice(numbers) for _ in range(nr_numbers)]
+    total_symbols = [random.choice(symbols) for _ in range(nr_symbols)]
+
+    password = total_letters + total_symbols + total_numbers
+    random.shuffle(password)
+    # Converting list to string using map function of list comprehension
+    new_pass = ''.join(map(str, password))
+
+    passwd.insert(tkinter.END, new_pass)
+
+    # Below line will make text for copy to clipboard
+    pyperclip.copy(new_pass)
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+
+
 class Data:
     def __init__(self, **kwargs):
         self.website_data = kwargs.get("website_data")
@@ -73,7 +99,8 @@ passwd = tkinter.Entry(width=31, show="*")
 passwd.grid(row=3, column=1)
 
 # Password generator Button
-passwd_button = tkinter.Button(text="Generate Password", highlightthickness=0, font=("Arial", 8))
+passwd_button = tkinter.Button(text="Generate Password", highlightthickness=0, font=("Arial", 8),
+                               command=generate_passwd)
 passwd_button.grid(column=2, row=3)
 # Add button
 add_button = tkinter.Button(text="Add", width=40, command=userdata)
