@@ -91,8 +91,27 @@ def userdata():
     user_input_data = Data(website_data=website_data, email=email_user_name, passw=site_password)
     print(user_input_data.website_data)
 
+# --------------------------- Getting password from data ----------------- #
+
+
+def find_password():
+    user_input = website.get()
+    try:
+        with open("userdata.json", "r") as file:
+            dic_data = json.load(file)
+    except FileNotFoundError:
+        print("No Data exists")
+    else:
+        if user_input in dic_data:
+            user_email = dic_data[user_input]["email"]
+            user_passwd = dic_data[user_input]["password"]
+            messagebox.showinfo(title="name and pass", message=f"this is your email: {user_email} and password: {user_passwd}")
+        else:
+            messagebox.showwarning(title="No Match", message="No Details for the website exists")
 
 # ---------------------------- UI SETUP ------------------------------- #
+
+
 window = tkinter.Tk()
 window.title("Password Manager")
 window.config(padx=50, pady=50)
@@ -114,11 +133,11 @@ pass_logo = tkinter.Label(text="Password:")
 pass_logo.grid(column=0, row=3)
 
 # Entry
-website = tkinter.Entry(width=48)
-website.grid(column=1, row=1, columnspan=2)
+website = tkinter.Entry(width=31)
+website.grid(column=1, row=1)
 website.focus()
 # Entry
-email = tkinter.Entry(width=48)
+email = tkinter.Entry(width=50)
 email.grid(column=1, row=2, columnspan=2)
 email.insert(tkinter.END, "ashu@gmail.com")
 # Entry
@@ -127,10 +146,14 @@ passwd.grid(row=3, column=1)
 
 # Password generator Button
 passwd_button = tkinter.Button(text="Generate Password", highlightthickness=0, font=("Arial", 8),
-                               command=generate_passwd)
+                               command=generate_passwd, padx=2, width=17)
 passwd_button.grid(column=2, row=3)
 # Add button
 add_button = tkinter.Button(text="Add", width=40, command=userdata)
 add_button.grid(column=1, row=4, columnspan=2)
+# Search Button
+search_button = tkinter.Button(text="Search", highlightthickness=0, font=("Arial", 8, "bold"), width=15,
+                               command=find_password)
+search_button.grid(row=1, column=2)
 
 window.mainloop()
