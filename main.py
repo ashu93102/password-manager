@@ -2,6 +2,7 @@ import tkinter
 from tkinter import messagebox
 import random
 import pyperclip
+import json
 # To show popup we can use popup module
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
@@ -44,6 +45,12 @@ def userdata():
     website_data = website.get()
     email_user_name = email.get()
     site_password = passwd.get()
+    new_data = {
+        website_data: {
+            "email": email_user_name,
+            "password": site_password
+        }
+    }
 
     # To show Popup message box, and it returns value as Boolean data type (true or false)
     if len(website_data) > 0 and len(site_password) > 0:
@@ -51,10 +58,30 @@ def userdata():
                                        message=f"email/username:-{email_user_name}\nPassword:-{site_password}\n"
                                                f" Do you want to save?")
         if is_ok:
-            with open("userdata.txt", "a") as file:
-                file.write(
-                    "website:- " + website_data + "/ " + "email/username:-" + email_user_name + "/ " + "Password:-"
-                    + site_password + "\n")
+            # If there is no json file then below code will throw and file not found error.
+            try:
+                # If json is not created then below code will throw error
+                with open("userdata.json", "r") as file:
+                    # to write in json we use json.dump() method
+                    # to read json data we use json.load() method
+                    # to update json data we use json.update() method
+                    # json.dump(new_data, file, indent=4)
+                    # reading data from json file 👇
+                    data = json.load(file)
+                    # updating old data with new data 👇
+                    data.update(new_data)
+            except FileNotFoundError:
+                # if file not found error occurs then below code run
+                with open("userdata.json", "w") as file:
+                    json.dump(new_data, file, indent=4)
+            else:
+                # If there is no error in try block then this block will be executed instead of except block
+                with open("userdata.json", "w") as file:
+                    # Saving updated data into file 👇
+                    json.dump(data, file, indent=4)
+                    # file.write(
+                    #     "website:- " + website_data + "/ " + "email/username:-" + email_user_name + "/ " + "Password:-"
+                    #     + site_password + "\n")
     else:
         messagebox.showwarning(title="Data Empty", message="Please fill blank fields")
 
